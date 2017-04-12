@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
+import { AuthService } from './auth.service';
+
 
 @Component({
-  selector: 'app-root',
+  selector: 'daily-deals',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
+  title = 'Daily Deals';
+
+  constructor(private authService: AuthService) {}
 }
