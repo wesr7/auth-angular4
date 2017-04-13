@@ -6,9 +6,7 @@ declare var Auth0Lock: any;
 
 @Injectable()
 export class AuthService {
-    lock = new Auth0Lock('689dGXnIKJe1gdt9yESdQaOsvB-SqYeh', 'wesr.auth0.com', {auth: {
-    redirect: false
-  }});
+
 
     constructor(private router: Router) {
          this.lock.on('authenticated', (authResult: any) => {
