@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http, RequestOptions } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -11,8 +11,12 @@ import { PrivateDealsComponent } from './private-deals.component';
 
 import { DealService } from './deal.service';
 import { AuthService } from './auth.service';
-import {  AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth } from 'angular2-jwt';
+import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { AuthGuard } from './auth-guard.service'
 
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp(new AuthConfig(), http, options);
+}
 
 
 @NgModule({
@@ -28,14 +32,13 @@ import {  AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth } from 'angular2-jwt
     RouterModule,
     AppRouting
   ],
-  providers: [DealService, AuthService, AuthHttp, provideAuth({
-            headerName: 'Authorization',
-            headerPrefix: 'bearer',
-            tokenName: 'token',
-            tokenGetter: (() => localStorage.getItem('id_token')),
-            globalHeaders: [{ 'Content-Type': 'application/json' }],
-            noJwtError: true
-        })],
+  providers: [DealService, AuthService, AuthGuard,
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [Http, RequestOptions]
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
